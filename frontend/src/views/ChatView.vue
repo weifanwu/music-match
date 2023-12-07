@@ -32,12 +32,12 @@
           <template v-for="message in messages" :key="message.id">
             <div 
               class="flex items-end"
-              :class="{ 'justify-end': message.user_id === userStore.user.id, 'justify-start': message.user_id !== userStore.user.id }"
+              :class="{ 'justify-end': message.user_id == userStore.user.id, 'justify-start': message.user_id != userStore.user.id }"
             >
               <div class="max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl">
                 <div 
                   class="inline-block rounded-lg p-3"
-                  :class="{ 'bg-blue-600 text-white': message.user_id === userStore.user.id, 'bg-gray-300': message.user_id !== userStore.user.id }"
+                  :class="{ 'bg-blue-600 text-white': message.user_id == userStore.user.id, 'bg-gray-300': message.user_id != userStore.user.id }"
                 >
                   <p>{{ message.content }}</p>
                 </div>
