@@ -1,7 +1,7 @@
-// const graphqlEndpoint1 = "http://localhost:1000/graphql";
-const graphqlEndpoint2 = "https://music-match-back-end.onrender.com/graphql";
+const graphqlEndpoint1 = "http://localhost:1000/graphql";
+// const graphqlEndpoint2 = "https://music-match-back-end.onrender.com/graphql";
 export const makeGraphQLPostRequest = async (mutation, variables) => {
-    const response = await fetch(graphqlEndpoint2, {
+    const response = await fetch(graphqlEndpoint1, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ export const makeGraphQLPostRequest = async (mutation, variables) => {
 
 export const makeGraphQLGetRequest = async (query, variables) => {
     try {
-        const response = await fetch(graphqlEndpoint2, {
+        const response = await fetch(graphqlEndpoint1, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

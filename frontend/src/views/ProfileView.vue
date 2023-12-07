@@ -158,7 +158,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group"
+                        v-if="this.userStore.user.id == this.user.user_id">
                         <p><strong>Music Introduction</strong></p>
                         <p>{{this.user.gpt_intro}}</p>
                     </div>

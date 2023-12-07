@@ -36,7 +36,7 @@
                         </strong>
                     </p>
                     <button 
-                    v-if="user.user_id !== user_id"
+                    v-if="user.user_id != user_id"
                     class="mt-2 py-1 px-3 bg-blue-500 text-white text-xs rounded-full hover:bg-blue-600"
                     @click="addFriend(user.id)"
                     >
