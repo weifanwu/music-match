@@ -14,10 +14,9 @@ const { schema } = require('./graphql/graphql'); // Adjust the path accordingly
 
 var app = express();
 const cors = require('cors');
+require('dotenv').config();
 
-
-// url = "https://musicmatch-5u08.onrender.com"
-url = "http://localhost:5173"
+url = process.env.VITE_SERVER_URL;
 
 app.use(cors());
 
