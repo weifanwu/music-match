@@ -49,7 +49,9 @@ export default {
 
     data() {
         const componentKey = ref(0);
+        const backend = import.meta.env.VITE_SERVER_URL;
         return {
+            backend,
             posts: [],
             body: '',
             user: this.userStore.user,
@@ -81,7 +83,7 @@ export default {
             console.log("delete id");
             console.log(id);
             this.posts = this.posts.filter(post => post.post_id != id);
-            fetch(`http://localhost:1000/api/posts/${id}/delete/`, {
+            fetch(`${this.backend}/api/posts/${id}/delete/`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

@@ -33,7 +33,9 @@ import { useUserStore } from "../stores/user";
 export default {
     data() {
         const userStore = useUserStore();
+        const backend = import.meta.env.VITE_SERVER_URL;
         return {
+            backend,
             userStore,
             users: [],
             songs: []
@@ -67,7 +69,7 @@ export default {
         return;
       }
       try {
-        const response = await axios.get(`http://localhost:1000/api/recommendations/${currentUserId}`);
+        const response = await axios.get(`${this.backend}/api/recommendations/${currentUserId}`);
         this.users = response.data.map(user => ({
           id: user.user_id, 
           name: user.username,

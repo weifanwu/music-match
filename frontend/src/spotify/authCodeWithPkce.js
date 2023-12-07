@@ -1,13 +1,20 @@
+const backend = import.meta.env.VITE_SERVER_URL;
+
 export async function redirectToAuthCodeFlow(clientId) {
+    const params = new URLSearchParams();
+
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
+    const front_local = "http://localhost:5173/feed";
+    params.append("redirect_uri", front_local);
+
+    // const front_web ="https://main--music-buddy.netlify.app/feed"
+    // params.append("redirect_uri", front_web);
 
     localStorage.setItem("verifier", verifier);
 
-    const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
-    params.append("redirect_uri", "http://localhost:5173/feed");
     params.append("scope", "user-read-private user-read-email user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
@@ -16,12 +23,17 @@ export async function redirectToAuthCodeFlow(clientId) {
 }
 
 export async function getAccessToken(clientId, code) {
-    const verifier = localStorage.getItem("verifier");
     const params = new URLSearchParams();
+    const front_local = "http://localhost:5173/feed";
+    params.append("redirect_uri", front_local);
+
+    // const front_web ="https://main--music-buddy.netlify.app/feed"
+    // params.append("redirect_uri", front_web);
+
+    const verifier = localStorage.getItem("verifier");
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "http://localhost:5173/feed");
     params.append("code_verifier", verifier);
 
     console.log("this is the param");

@@ -72,11 +72,12 @@ import { io } from "socket.io-client";
 export default {
     name: 'chat',
     setup() {
-        const URL ="http://localhost:1000";
-        const socket = io(URL);
+        const backend = import.meta.env.VITE_SERVER_URL;
+        const socket = io(backend);
 
         const userStore = useUserStore();
         return {
+            backend,
             socket,
             userStore
         }
@@ -110,7 +111,7 @@ export default {
     methods: {
         getContacts() {
             const currentUserId = this.userStore.user.id;
-            fetch(`http://localhost:1000/api/getConversation?id=${currentUserId}`)
+            fetch(`${this.backend}/api/getConversation?id=${currentUserId}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -134,7 +135,7 @@ export default {
             if (friend) {
             this.activeFriend = friend;
             this.conversation = conversation_id
-            fetch(`http://localhost:1000/api/getMessages?conversation_id=${conversation_id}`)
+            fetch(`${this.backend}/api/getMessages?conversation_id=${conversation_id}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -166,7 +167,7 @@ export default {
                     message: message,
                     conversation_id: conversation_id,
                 };
-                fetch('http://localhost:1000/api/addMessage', {
+                fetch(`${this.backend}/api/addMessage`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

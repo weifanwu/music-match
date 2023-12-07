@@ -229,8 +229,12 @@ export default {
     },
 
     data() {
+        const frontend = import.meta.env.VITE_FRONTEND_URL;
+        const backend = import.meta.env.VITE_SERVER_URL;
         return {
             currentView: 'Profile',
+            frontend,
+            backend,
             songs: [],
             posts: [],
             user: {
@@ -296,6 +300,11 @@ export default {
     },
 
     methods: {
+        test() {
+            console.log("this is the env");
+            console.log(import.meta.env.VITE_FRONTEND_URL);
+            console.log(import.meta.env.VITE_SERVER_URL);
+        },
         showEditProfile() {
             this.currentView = 'editProfile';
         },
