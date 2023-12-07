@@ -69,7 +69,9 @@ export default {
         const userStore = useUserStore();
         const toastStore = useToastStore()
         const user_id = userStore.user.id;
+        const backend = import.meta.env.VITE_SERVER_URL;
         return {
+            backend,
             query: '',
             users: [],
             errorMessage: '',
@@ -89,7 +91,7 @@ export default {
         console.log('Searching for:', this.query);
 
         try {
-            const response = await axios.get(`http://localhost:1000/api/search`, { params: { query: this.query } });
+            const response = await axios.get(`${this.backend}/api/search`, { params: { query: this.query } });
             console.log('Search results:', response.data);
             this.users = response.data.users;
         } catch (error) {
@@ -101,7 +103,7 @@ export default {
             friends_id: friend,
             current_id: this.user_id
         };
-        fetch(`http://localhost:1000/api/addFriend`, {
+        fetch(`${this.backend}/api/addFriend`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

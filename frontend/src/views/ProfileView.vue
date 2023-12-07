@@ -264,9 +264,14 @@ export default {
     },
 
     data() {
+        const frontend = import.meta.env.VITE_FRONTEND_URL;
+        const backend = import.meta.env.VITE_SERVER_URL;
         return {
             gptIntro: "",
             currentView: 'Profile',
+            frontend,
+            backend,
+            songs: [],
             posts: [],
             user: {
                 user_id: null,
@@ -335,10 +340,10 @@ export default {
     },
 
     methods: {
-        setChatGPT(data) {
-            this.profile.gpt_intro = data;
-            console.log(data)
-            console("profile: " + this.profile.gpt_intro)
+        test() {
+            console.log("this is the env");
+            console.log(import.meta.env.VITE_FRONTEND_URL);
+            console.log(import.meta.env.VITE_SERVER_URL);
         },
         showEditProfile() {
             this.currentView = 'editProfile';

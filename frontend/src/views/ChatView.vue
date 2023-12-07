@@ -32,12 +32,12 @@
           <template v-for="message in messages" :key="message.id">
             <div 
               class="flex items-end"
-              :class="{ 'justify-end': message.user_id === userStore.user.id, 'justify-start': message.user_id !== userStore.user.id }"
+              :class="{ 'justify-end': message.user_id == userStore.user.id, 'justify-start': message.user_id != userStore.user.id }"
             >
               <div class="max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl">
                 <div 
                   class="inline-block rounded-lg p-3"
-                  :class="{ 'bg-blue-600 text-white': message.user_id === userStore.user.id, 'bg-gray-300': message.user_id !== userStore.user.id }"
+                  :class="{ 'bg-blue-600 text-white': message.user_id == userStore.user.id, 'bg-gray-300': message.user_id != userStore.user.id }"
                 >
                   <p>{{ message.content }}</p>
                 </div>
@@ -72,11 +72,12 @@ import { io } from "socket.io-client";
 export default {
     name: 'chat',
     setup() {
-        const URL ="http://localhost:1000";
-        const socket = io(URL);
+        const backend = import.meta.env.VITE_SERVER_URL;
+        const socket = io(backend);
 
         const userStore = useUserStore();
         return {
+            backend,
             socket,
             userStore
         }
@@ -110,7 +111,7 @@ export default {
     methods: {
         getContacts() {
             const currentUserId = this.userStore.user.id;
-            fetch(`http://localhost:1000/api/getConversation?id=${currentUserId}`)
+            fetch(`${this.backend}/api/getConversation?id=${currentUserId}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -134,7 +135,7 @@ export default {
             if (friend) {
             this.activeFriend = friend;
             this.conversation = conversation_id
-            fetch(`http://localhost:1000/api/getMessages?conversation_id=${conversation_id}`)
+            fetch(`${this.backend}/api/getMessages?conversation_id=${conversation_id}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -166,7 +167,7 @@ export default {
                     message: message,
                     conversation_id: conversation_id,
                 };
-                fetch('http://localhost:1000/api/addMessage', {
+                fetch(`${this.backend}/api/addMessage`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
