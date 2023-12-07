@@ -4,7 +4,7 @@
       Create My Music Introduction
     </button>
     <div class="response-box">
-      Response: <div v-if="chatResponse" class="response">{{ chatResponse }}</div>
+      Response: <div v-if="chatResponse" class="response">{{ this.chatResponse  }}</div>
     </div>
   </div>
 </template>
@@ -12,7 +12,13 @@
 <script>
 
 export default {
+  props: {
+    user: Object,
+    lastResponse: String
+  },
+  
   data() {
+    // const chatResponse = lastResponse;
     return {
       songs: 'Fast Animals by the Strokes, Disco 2000 by Pulp, Sugar Girl by The Cure',
       chatResponse: ''
@@ -20,10 +26,13 @@ export default {
   },
   methods: {
     async sendQuery() {
-      const messagePrompt = `Give me a paragraph introduction of my music style. Include 10 emojis at the last whole line to represent my style. My top tracks are ${this.songs}.`;
+      ``
+      const messagePrompt = `I love those songs: Fast Animals by the Strokes, Disco 2000 by Pulp, and Sugar Girl by The Cure; please analyze my personality according to those songs and  write one paragraph for self-introduction. Don't include the song names directly. Include 10 emojis at the last whole line to represent my style, like this 'I am the kind of person who cherishes memories, finds beauty in introspection, and approaches life with an infectious zest. Whether we are discussing lyrics, sharing favorite tracks, or simply dancing to the rhythm of life, I'm here to make every moment unforgettable. Let's create our own musical journey together! 🎵📖🌟🕺💃🎉' My top tracks are ${this.songs}.`;
+
+      // const messagePrompt = "hello"
 
       try {
-        const url = process.env.VITE_API_URL
+        const url = 'http://localhost:1000/api/gptintro';
         const response = await fetch(url, {
           method: 'POST',
           headers: {
@@ -31,17 +40,21 @@ export default {
           },
           body: JSON.stringify({ query: messagePrompt }),
         });
-
+        
         if (response.ok) {
-          const data = await response.json();
+          const data = await response.text();
           this.chatResponse = data;
+          // console.log(data);
+          // Assuming this is inside a Vue component, you can use `this.$emit` to send the data to the parent component
+          this.$emit("setChatGPTIntro", data);
         } else {
           console.error('Error:', response.status, response.statusText);
         }
       } catch (error) {
         console.error('Error:', error);
       }
-  },
+
+    },
 
   }
 }
@@ -50,7 +63,6 @@ export default {
 <style scoped>
 .chat-container {
   max-width: 500px;
-  height: 400px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ddd;
@@ -88,7 +100,6 @@ export default {
   border-radius: 4px;
 }
 .response-box {
-  height: 300px;
   margin-top: 20px;
   padding: 10px;
   background-color: #f8f8f8;
