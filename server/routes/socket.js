@@ -3,10 +3,13 @@ var express = require('express');
 const router = express.Router();
 const server = require('http').createServer();
 
+require('dotenv').config();
+
+var url = process.env.VITE_FRONTEND_URL;
 
 const io = require('socket.io')(server, {
     cors: {
-        origin: ["http://localhost:5173/"]
+        origin: [url]
     }
 });
 

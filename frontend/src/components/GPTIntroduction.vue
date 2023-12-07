@@ -18,8 +18,9 @@ export default {
   },
   
   data() {
-    // const chatResponse = lastResponse;
+    const backend = import.meta.env.VITE_SERVER_URL;
     return {
+      backend,
       songs: 'Fast Animals by the Strokes, Disco 2000 by Pulp, Sugar Girl by The Cure',
       chatResponse: ''
     };
@@ -32,7 +33,7 @@ export default {
       // const messagePrompt = "hello"
 
       try {
-        const url = 'http://localhost:1000/api/gptintro';
+        const url = `${this.backend}/api/gptintro`;
         const response = await fetch(url, {
           method: 'POST',
           headers: {

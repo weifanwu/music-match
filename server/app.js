@@ -16,7 +16,7 @@ var app = express();
 const cors = require('cors');
 require('dotenv').config();
 
-url = process.env.VITE_SERVER_URL;
+var url = process.env.VITE_SERVER_URL;
 
 app.use(cors());
 
