@@ -48,6 +48,7 @@
                     </button>
                 </div>
             </div>   
+
         </div>
 
        
@@ -85,6 +86,18 @@
 
                     <!-- Music Preferences -->
                     <div>
+                        <label for="music">Favorite Music Genres:</label>
+                        <div class="select-genre-container">
+                            <div v-for="genre in Object.keys(musicGenres)" :key="genre">
+                            <input 
+                                type="checkbox" 
+                                :value="genre" 
+                                v-model="profile.selectedGenres"
+                                :id="genre"
+                            >
+                            <label :for="genre">{{ genre }}</label>
+                            </div>
+                        </div>
                         <div class="genres-container">
                             <div 
                                 class="genre-card" 
@@ -132,6 +145,7 @@
                     <!-- Music Preferences -->
                     <div class="form-group">
                         <p><strong>Favorite Music Genres:</strong></p>
+                        <p>{{ profile.genre }}</p>
                         <div class="genres-container">
                             <div 
                                 class="genre-card" 
@@ -143,6 +157,12 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <p><strong>Music Introduction</strong></p>
+                        <p>{{this.user.gpt_intro}}</p>
+                    </div>
+                   
             </div>
 
             <!-- check the user posts -->
@@ -167,11 +187,24 @@
                 </div>
             </div>
         </div>
+
         <div class="main-right col-span-2 space-y-4"  
             v-if="this.userStore.user.id == this.user.user_id">
             <div class="p-4 bg-white border border-gray-200 rounded-lg">
                 <h1>GPT Music Introduction:</h1>
-                <GPTIntroduction />
+                <GPTIntroduction 
+                    @setChatGPTIntro="setChatGPT"
+                    v-bind:user=this.user 
+                    v-bind:lastResponse=this.profile.gpt_intro
+                />
+
+                <button 
+                        type="submit" 
+                        class="inline-block mt-4 py-4 px-3 bg-purple-600 text-xs text-white rounded-lg" 
+                        @click="submitGPTIntro">
+                        Save
+                </button>
+
             </div>
         </div>
 
@@ -180,11 +213,13 @@
             <div class="p-4 bg-white border border-gray-200 rounded-lg">
                 <h1>GPT Music Introduction:</h1>
                 <div class="chat-container">
-                    <p>Here is the music introduction.</p>
+                    <p>{{ this.user.gpt_intro }}</p>
                 </div>
             </div>
         </div>
+
         
+
     </div>
 </template>
 
@@ -203,7 +238,7 @@ input[type="file"] {
 
 <script>
 import axios from 'axios'
-import { useUserStore } from '../stores/user'
+import { useUserStore } from '@/stores/user'
 import { useToastStore } from '@/stores/toast'
 import FeedItem from '../components/FeedItem.vue'
 import FeedForm from '../components/FeedForm.vue'
@@ -232,6 +267,7 @@ export default {
         const frontend = import.meta.env.VITE_FRONTEND_URL;
         const backend = import.meta.env.VITE_SERVER_URL;
         return {
+            gptIntro: "",
             currentView: 'Profile',
             frontend,
             backend,
@@ -253,7 +289,8 @@ export default {
                 avatar: this.userStore.user.avatar,
                 age: this.userStore.user.age,
                 mbti: this.userStore.user.mbti,
-                selectedGenres: this.userStore.user.genres
+                selectedGenres: this.userStore.user.genres,
+                gpt_intro: null
             },
             mbtiTypes: ['ISTJ', 'ISFJ', 'INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ'],
             musicGenres : {
@@ -288,6 +325,9 @@ export default {
         this.getProfile();
         const params = new URLSearchParams(window.location.search);
         const code = params.get("code");
+        if (code) {
+            this.getSongs()
+        }
     },
 
     watch: { 
@@ -319,6 +359,22 @@ export default {
             this.errors.age = this.profile.age ? '' : 'Age is required.';
             return this.errors.name === '' && this.errors.age === '';
         },
+
+        submitGPTIntro() {
+            axios
+                .post(`/api/updateGPTIntro/${this.userStore.user.id}/`, {
+                    gpt_intro: this.profile.gpt_intro
+                })
+                .then(response => {
+                    console.log("this is the gpt_intro information: ");
+                    console.log(response.data[0].gpt_intro);
+                    this.user.gpt_intro = response.data[0].gpt_intro;
+                    console("user info: " + this.user.gpt_intro)
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
         async submitForm() {
             console.log('Profile Data:', this.profile);
             this.currentView = 'Profile';
@@ -330,16 +386,19 @@ export default {
                 .post(`/api/updateProfile/${storedUserId}/`, {
                     username: this.profile.name,
                     age: this.profile.age,
-                    mbti: this.profile.mbti
+                    mbti: this.profile.mbti,
+                    gpt_intro: this.profile.gpt_intro
                 })
                 .then(response => {
                     console.log("this is the profile information: ");
                     console.log(response.data);
                     this.user = response.data[0];
+                    console("user info: " + this.user.gpt_intro)
                 })
                 .catch(error => {
                     console.error(error);
                 });
+
         },
 
         deletePost(id) {
@@ -474,7 +533,6 @@ h1 {
 
 .chat-container {
   max-width: 500px;
-  height: 400px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ddd;
