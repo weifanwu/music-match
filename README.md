@@ -1,4 +1,4 @@
-# final-project-jerryiscat
+# final-project-music-match
 Project Proposal
 Project Description:
 
@@ -19,7 +19,7 @@ So, if you're someone seeking to expand your social circle with people who under
 Technical Description
 Include an architectural diagram mapping 1) all client, server, and database components, 2) flow of data, and its communication type (websockets? REST API?
 
-![image](https://github.com/info441-wi23/final-project-jerryiscat/assets/91921275/8671bd10-74b5-4e3b-bf89-325195bd9552)
+![image](/frontend/public/diagram.png)
 
 Communication Type: REST API
 A summary table of user stories (descriptions of the experience a user would want) in a table like below.
@@ -27,7 +27,7 @@ For each user story, say who the user is, and what action or outcome the user wa
 For each of your user stories, describe in 1-3 sentences what your technical implementation strategy is. Explicitly note in bold which technology you are using (if applicable). 
 
 ![image](https://github.com/info441-wi23/final-project-jerryiscat/assets/91921275/5f252d22-1751-4076-833f-a89d5c70de2a)
-![image](https://github.com/info441-wi23/final-project-jerryiscat/assets/91921275/a551f1b1-a1e3-4c44-98ca-a5c47fa81983)
+![image](/frontend/public/userstory.png)
 
 Additionally include:
 Include a list of available endpoints your application will provide and what is the purpose it serves. Ex. GET /driver/{id}, POST "/driver/{id}/rating"
@@ -55,3 +55,4 @@ Include a list of available endpoints your application will provide and what is 
 Include any database schemas as an appendix
 
 ![image](https://github.com/info441-wi23/final-project-jerryiscat/assets/91921275/1b2ae60d-f1f6-4efa-8399-bbd4473bcc5b)
+
