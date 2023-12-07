@@ -12,7 +12,7 @@
           <div 
             @click="getMessages(user.conversation_id)"
             class="flex items-center p-2 cursor-pointer hover:bg-gray-100 rounded-lg"
-            :class="{ 'bg-gray-200': conversation === user.conversation_id }"
+            :class="{ 'bg-gray-200': conversation == user.conversation_id }"
           >
             <img src="/头像.jpeg" alt="User avatar" class="w-10 h-10 rounded-full mr-2">
             <p class="text-sm font-bold">{{ user.name }}</p>

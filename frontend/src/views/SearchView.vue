@@ -26,7 +26,7 @@
                 <div 
                     class="p-4 text-center bg-gray-100 rounded-lg"
                     v-for="user in users"
-                    v-bind:key="user.id"
+                    v-bind:key="user.user_id"
                 >
                    
                     <RouterLink :to="{name: 'profile', params:{'id': user.user_id}}"> <img :src="'/头像.jpeg'" class="mb-6 rounded-full"></RouterLink>
