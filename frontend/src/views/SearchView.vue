@@ -37,7 +37,7 @@
                     </p>
                     <button 
                     v-if="user.user_id != user_id"
-                    class="mt-2 py-1 px-3 bg-blue-500 text-white text-xs rounded-full hover:bg-blue-600"
+                    class="mt-2 py-1 px-3 bg-purple-500 text-white text-xs rounded-full hover:bg-blue-600"
                     @click="addFriend(user.user_id)"
                     >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 inline">
