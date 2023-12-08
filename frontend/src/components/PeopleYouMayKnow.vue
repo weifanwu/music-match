@@ -1,28 +1,36 @@
 <template>
-  <div class="p-4 bg-white border border-gray-200 rounded-lg">
-    <h3 class="mb-6 text-xl font-semibold">People You May Know</h3>
-    <button @click="getRecommendations" class="mb-6 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">Get Recommendations</button>
+  <section class="p-4 bg-white border border-gray-200 rounded-lg mb-4">
+    <div class="flex justify-center">
+      <h3 class="text-xl font-semibold mb-6">People You May Know</h3>
+    </div>
+    <div class="flex justify-center mb-4">
+      <button @click="getRecommendations" class="p-2 bg-purple-600 text-white rounded hover:bg-blue-600 transition-colors">Get Recommendations</button>
+    </div>
     
     <div v-if="users.length" class="space-y-4">
       <div v-for="user in users" :key="user.id" class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
+        <RouterLink :to="{ name: 'profile', params: { id: user.id } }">
         <div class="flex items-center space-x-3">
           <img :src="user.avatar || '/头像.jpeg'" class="w-10 h-10 rounded-full object-cover" :alt="`${user.name}'s avatar`">
           <p class="text-sm font-medium">{{ user.name }}</p>
         </div>
-        <RouterLink :to="{ name: 'profile', params: { id: user.id } }" class="py-1 px-3 bg-purple-600 text-white text-xs rounded-lg hover:bg-purple-700 transition-colors">View Profile</RouterLink>
+      </RouterLink>
       </div>
     </div>
+  </section>
 
-    <div v-if="songs.length" class="mt-8">
+  <section class="p-4 bg-white border border-gray-200 rounded-lg">
+    <div v-if="songs.length">
+      <div class="flex justify-center"></div>
       <h4 class="text-lg font-semibold mb-3">Top Tracks</h4>
+    </div>
       <div class="grid grid-cols-2 gap-4">
         <div v-for="(song, index) in songs" :key="index" class="song-item">
         <img :src="song.album.images[0].url" :alt="song.name" />
         <p>{{ song.name }}</p>
         </div>
       </div>
-    </div>
-  </div>
+  </section>
 </template>
 
 <script>
