@@ -54,8 +54,8 @@ router.post('/api/addFriend', async (req, res) => {
     try {
         const friend = req.body.friends_id;
         const user = req.body.current_id;
-        console.log(friend)
-        console.log(user);
+        console.log('friend', friend)
+        console.log('user', user);
         const query = 'INSERT INTO conversation_user("user_1", "user_2") VALUES ($1, $2)';
         const addFriend = await db.query(query, [user, friend]);
         res.send(addFriend);

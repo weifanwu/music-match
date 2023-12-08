@@ -9,13 +9,19 @@
     
     <div v-if="users.length" class="space-y-4">
       <div v-for="user in users" :key="user.id" class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
-        <RouterLink :to="{ name: 'profile', params: { id: user.id } }">
-        <div class="flex items-center space-x-3">
-          <img :src="user.avatar || '/头像.jpeg'" class="w-10 h-10 rounded-full object-cover" :alt="`${user.name}'s avatar`">
-          <p class="text-sm font-medium">{{ user.name }}</p>
-        </div>
+      <RouterLink :to="{ name: 'profile', params: { id: user.id } }" class="flex items-center space-x-3">
+        <img :src="user.avatar || '/头像.jpeg'" class="w-10 h-10 rounded-full object-cover" :alt="`${user.name}'s avatar`">
+        <p class="text-sm font-medium">{{ user.name }}</p>
       </RouterLink>
-      </div>
+      <button 
+        class="py-1 px-3 bg-purple-500 text-white text-xs rounded-full hover:bg-blue-600 flex items-center"
+        @click="addFriend(user.id)"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      </button>
+    </div>     
     </div>
   </section>
 
@@ -46,7 +52,8 @@ export default {
             backend,
             userStore,
             users: [],
-            songs: []
+            songs: [],
+            user_id: userStore.user.id
         }
     },
 
@@ -70,6 +77,38 @@ export default {
 
         this.userStore.setSongs(this.songs);
       },
+      addFriend(friend) {
+        const postData = {
+            friends_id: friend,
+            current_id: this.user_id
+        };
+        
+        fetch(`${this.backend}/api/addFriend`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postData),
+        })
+        .then(response => {
+            if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response:', data);
+            this.forceRerender();
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+        });
+    },
+    forceRerender() {
+        console.log(this.componentKey);
+        this.componentKey += 1;
+    },
+  
     async getRecommendations() {
       const currentUserId = this.userStore.user.id;
       if (!currentUserId) {
