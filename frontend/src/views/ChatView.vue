@@ -1,34 +1,35 @@
 <template>
-    <div class="flex h-screen">
-      <!-- Contact List with Header -->
-      <aside class="w-1/4 bg-white p-4 border-r overflow-auto">
-        <h3 class="text-xl font-semibold mb-4 border-b pb-2">Contacts</h3>
-        <template v-if="!users.length">
-          <p class="text-gray-600">
-            You don't have any friends now, search to add one!
-          </p>
-        </template>
-        <template v-for="user in users" :key="user.id">
-          <div 
-            @click="getMessages(user.conversation_id)"
-            class="flex items-center p-2 cursor-pointer hover:bg-gray-100 rounded-lg"
-            :class="{ 'bg-gray-200': conversation == user.conversation_id }"
-          >
-            <img src="/头像.jpeg" alt="User avatar" class="w-10 h-10 rounded-full mr-2">
-            <p class="text-sm font-bold">{{ user.name }}</p>
-          </div>
-        </template>
-      </aside>
-  
-      <!-- Chat Section -->
-      <section class="w-3/4 flex flex-col">
-        <!-- Active Chat Header -->
-        <header v-if="activeFriend" class="bg-white p-4 shadow flex-none">
-          <h2 class="text-xl font-bold">{{ activeFriend.name }}</h2>
-        </header>
-  
-        <!-- Messages List -->
-        <div class="flex-grow overflow-auto p-4 space-y-4" style="max-height: 55vh;">
+  <div class="flex h-screen bg-gray-100">
+    <!-- Contact List with Header -->
+    <aside class="w-1/4 bg-white p-4 border-r overflow-auto">
+      <h3 class="text-xl font-semibold mb-4 border-b pb-2">Contacts</h3>
+      <template v-if="!users.length">
+        <p class="text-gray-600">
+          You don't have any friends now, search to add one!
+        </p>
+      </template>
+      <template v-for="user in users" :key="user.id">
+        <div 
+          @click="getMessages(user.conversation_id)"
+          class="flex items-center p-2 cursor-pointer hover:bg-gray-100 rounded-lg"
+          :class="{ 'bg-gray-200': conversation === user.conversation_id }"
+        >
+          <img src="/头像.jpeg" alt="User avatar" class="w-10 h-10 rounded-full mr-2">
+          <p class="text-sm font-bold">{{ user.name }}</p>
+        </div>
+      </template>
+    </aside>
+
+    <!-- Chat Section -->
+    <section class="w-3/4 flex flex-col" v-if="conversation !== -1">
+      <!-- Active Chat Header -->
+      <header class="bg-white p-4 shadow flex-none">
+        <h2 class="text-xl font-bold">{{ activeFriend ? activeFriend.name : 'Select a conversation' }}</h2>
+      </header>
+
+      <!-- Messages List -->
+      <div class="flex-grow overflow-auto p-4 space-y-4">
+        <template v-if="activeFriend && messages.length">
           <template v-for="message in messages" :key="message.id">
             <div 
               class="flex items-end"
@@ -37,7 +38,7 @@
               <div class="max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl">
                 <div 
                   class="inline-block rounded-lg p-3"
-                  :class="{ 'bg-blue-600 text-white': message.user_id == userStore.user.id, 'bg-gray-300': message.user_id != userStore.user.id }"
+                  :class="{ 'bg-purple-600 text-white': message.user_id == userStore.user.id, 'bg-gray-300': message.user_id != userStore.user.id }"
                 >
                   <p>{{ message.content }}</p>
                 </div>
@@ -46,24 +47,29 @@
               </div>
             </div>
           </template>
-        </div>
-  
-        <!-- Message Input -->
-        <div class="bg-white p-4 shadow flex-none">
-          <form @submit.prevent="submitForm">
-            <textarea v-model="body" class="w-full p-2 bg-gray-100 rounded" placeholder="Type your message..."></textarea>
+        </template>
+        <template v-else>
+          <p class="text-center text-gray-500">No messages yet.</p>
+        </template>
+      </div>
+
+      <!-- Message Input -->
+      <div class="bg-white p-4 shadow flex-none" v-if="activeFriend">
+        <form @submit.prevent="submitForm">
+          <textarea v-model="body" class="w-full p-2 bg-gray-100 rounded" placeholder="Type your message..."></textarea>
             <div class="text-right mt-2">
               <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 focus:outline-none focus:ring">
                 Send
               </button>
             </div>
-          </form>
-        </div>
-      </section>
-    </div>
-  </template>
-  
-  
+        </form>
+      </div>
+    </section>
+    <section class="w-3/4 flex items-center justify-center" v-else>
+      <p class="text-gray-500">Select a contact to view the conversation.</p>
+    </section>
+  </div>
+</template>
 
 <script>
 import { useUserStore } from '@/stores/user'
